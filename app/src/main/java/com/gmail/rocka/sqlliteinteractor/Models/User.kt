@@ -9,4 +9,7 @@ class User {
         this.name = Name
         this.age = Age
     }
+
+    constructor(){
+    }
 }
