@@ -25,6 +25,7 @@ class DatabaseHandler(context:Context):SQLiteOpenHelper(context, DATABASE_NAME,n
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     }
 
+    // Insert the data to DB(SQLLITE)
     fun insertData(user:User):Long {
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -35,6 +36,7 @@ class DatabaseHandler(context:Context):SQLiteOpenHelper(context, DATABASE_NAME,n
         return result
     }
 
+    // Read the data from the sqlLite
     fun ReadData():MutableList<User>{
         var list:MutableList<User> = ArrayList()
         val db=this.readableDatabase
@@ -56,6 +58,37 @@ class DatabaseHandler(context:Context):SQLiteOpenHelper(context, DATABASE_NAME,n
         db.close()
         return list
     }
+
+    //Update data, will increment the age by 1 for all the fields
+    fun updateData() {
+        val db = this.writableDatabase
+        val querry = "SELECT * FROM ${TABLE_NAME}"
+        val result = db.rawQuery(querry, null)
+
+        if (result.moveToFirst()) {
+            do {
+                var cv = ContentValues()
+                cv.put(COL_AGE, (result.getInt(result.getColumnIndex(COL_AGE)) + 1))
+                db.update(
+                    TABLE_NAME, cv, COL_ID + "=? AND " + COL_NAME + "=?",
+                    arrayOf(
+                        result.getString(result.getColumnIndex(COL_ID)),
+                        result.getString(result.getColumnIndex(COL_NAME))
+                    )
+                )
+            } while (result.moveToNext())
+        }
+
+        db.close()
+    }
+
+    // Delete Data
+    fun deleteData() {
+        var db = this.writableDatabase
+        db.delete(TABLE_NAME, COL_ID + "=?", arrayOf(1.toString())) // to delete all the value pass null to 2nd AND 3RD PARAMETER
+        db.close()
+    }
+
 
 
 }

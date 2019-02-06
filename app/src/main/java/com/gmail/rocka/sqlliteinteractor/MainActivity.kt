@@ -41,5 +41,15 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        btnUpdate.setOnClickListener {
+            db.updateData()
+            btnRead.performClick()
+        }
+
+        btnDelete.setOnClickListener {
+            db.deleteData()
+            btnRead.performClick()
+        }
+
     }
 }
